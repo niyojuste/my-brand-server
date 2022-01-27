@@ -1,0 +1,38 @@
+{
+  "name": "my-brand-server",
+  "version": "1.0.0",
+  "description": "My brand project server using ExpressJs, MongoDB, JWT and Joi for validation",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node -r dotenv/config lib/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niyojuste/my-brand-server.git"
+  },
+  "keywords": [
+    "Express",
+    "MongoDB",
+    "JWT",
+    "Joi"
+  ],
+  "author": "Juste Niyonteze",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/niyojuste/my-brand-server/issues"
+  },
+  "homepage": "https://github.com/niyojuste/my-brand-server#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mongoose": "^6.1.8"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "core-js": "^3.20.3",
+    "dotenv": "^14.3.2",
+    "nodemon": "^2.0.15"
+  },
+  "type": "module"
+}
