@@ -18,6 +18,7 @@ class UserController extends AppController {
         super(model)
         this._model = model
         this.validatePost = this.validatePost.bind(this)
+        this.validatePatch = this.validatePatch.bind(this)
     }
 
     async validatePost(req, res) {
@@ -37,6 +38,25 @@ class UserController extends AppController {
             }
         }
         super.create(value, res)
+    }
+
+    async validatePatch(req, res) {
+        const newSchema = this.schema.or('name', 'username', 'email', 'password', 'avatar', 'location')
+        const { error } = newSchema.validate(req.body)
+
+        if(error) {
+            return res.status(400).json(error)
+        }
+        if(req.body.avatar) {
+            try {
+                const result = await Cloudinary.uploadUser(req.body.avatar)
+                req.body.avatar = result.secure_url
+                console.log(result.message)
+            } catch(e) {
+                res.status(403).json(e.message)
+            }
+        }
+        super.update(req, res)
     }
 
     
