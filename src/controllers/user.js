@@ -1,6 +1,8 @@
+import bcrypt from 'bcrypt'
 import Joi from 'joi'
-import AppController from "./app.js"
 import Cloudinary from '../helpers/cloudinary.js'
+import AppController from "./app.js"
+import AuthController from './auth.js'
 
 class UserController extends AppController {
     schema = Joi.object({
@@ -17,11 +19,13 @@ class UserController extends AppController {
     constructor(model) {
         super(model)
         this._model = model
+        this.create = this.create.bind(this)
+        this.login = this.login.bind(this)
         this.validatePost = this.validatePost.bind(this)
         this.validatePatch = this.validatePatch.bind(this)
     }
 
-    async validatePost(req, res) {
+    validatePost = async (req, res) => {
         const newSchema = this.schema.and('name', 'username', 'email', 'password')
         const { error, value } = newSchema.validate(req.body)
 
@@ -37,10 +41,75 @@ class UserController extends AppController {
                 res.status(403).json(e.message)
             }
         }
-        super.create(value, res)
+
+        this.create(value, res)
     }
 
-    async validatePatch(req, res) {
+    create = async (newuser, res) => {
+        try {
+            const user = new this._model(newuser)
+            await user.save()
+            const token = await new AuthController(this._model).generateAuthToken(user._id)
+            console.log(token)
+            res.status(201).send({ token, user })
+            
+        } catch (e) {
+            res.status(400).json({ e })
+        }
+
+    }
+
+    login = async (req, res) => {
+        try {
+            const user = await this._model.findOne({ 
+                username: req.body.username 
+            })
+            
+            if(!user) {
+                return res.status(404).json({ error: 'Unable to login'})
+            }
+            
+            const isMatch = await bcrypt.compare(req.body.password, user.password)
+
+            if(!isMatch) {
+                return res.status(404).json({ error: 'Unable to login' })
+            }
+
+            const token = await new AuthController(this._model).generateAuthToken(user._id)
+
+            res.json({ token, user })
+        } catch(e) {
+            res.status(400).json(e)
+        }
+           
+    }
+
+    logout = async (req, res) => {
+        try {
+            req.user.tokens.splice(req.user.tokens.findIndex(token => {
+                token.token === req.token
+            }), 1)
+            await req.user.updateOne(req.user)
+
+            res.json({ message: "Logged out" })
+        } catch(e) {
+            res.status(500).json({ message: "Failed to logout", e})
+        }
+
+    }
+
+    logoutAll = async (req, res) => {
+        try {
+            req.user.tokens = []
+            await req.user.updateOne(req.user)
+            
+            res.json({ message: "Lougged out everywhere" })
+        } catch(e) {
+            res.status(500).json({ message: "Failed to logout", e })
+        }
+    }
+
+    validatePatch = async (req, res) => {
         const newSchema = this.schema.or('name', 'username', 'email', 'password', 'avatar', 'location')
         const { error } = newSchema.validate(req.body)
 
