@@ -28,7 +28,7 @@ class PostController extends AppController {
 		try {
 			const result = await Cloudinary.uploadPost(req.body.image)
 			req.body.image = result.secure_url
-			console.log(result.message)
+			req.body.user = req.user._id
 			super.create(req.body, res)
 		} catch (e) {
 			res.status(403).json(e.message)
@@ -52,27 +52,38 @@ class PostController extends AppController {
 		}
 	}
 
+    getAllFromUser = async (req, res) => {
+        try {
+            const posts = await this._model.find({ user: req.user._id })
+            res.json(posts)
+        } catch(e) {
+            res.status(500).json({ error: "something went wrong", e })
+        }
+    }
+
     async react(req, res) {
         try {
             const post = await this._model.findOne({ _id: req.params.id })
+            console.log(post)
 
             if(!post) {
                 return res.status(404).json({ message: 'Article not found' })
             }
-            const message = ''
+            let message = ''
+            console.log(post.likes)
 
-            if(post.likes.find(user => user.toString() === (req.params.user))) {
-                await post.likes.splice(post.likes.findIndex(user => user.toString() === req.params.user), 1)
-                message = 'Like removed'
+            if(post.likes.find(user => user.toString() === req.user._id.toString())) {
+                await post.likes.splice(post.likes.findIndex(user => user === req.user._id), 1)
+                message = "Like removed"
             } else {
-                await post.likes.push(req.params.user)
-                message = 'Like added'
+                await post.likes.push(req.user._id)
+                message = "Like added"
             }
             await post.save()
 
             res.json({ message })
         } catch(e) {
-            res.status(500).json(e)
+            res.status(500).json({ error: "something went wrong" })
         }
     }
 
@@ -87,7 +98,7 @@ class PostController extends AppController {
                 return res.status(400).json(error.message)
             }
             post.comments.push({
-                user: req.params.user,
+                user: req.user._id,
                 comment: req.body.comment
             })
             await post.save()

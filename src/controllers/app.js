@@ -9,7 +9,6 @@ class AppController {
     }
 
     async create(obj, res) {
-        console.log(obj)
         try {
             const object = new this._model(obj)
             await object.save()
