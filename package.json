@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
-    "start": "nodemon -r dotenv/config src/index.js"
+    "start": "npm run build && node -r dotenv/config lib/index.js",
+    "dev": "nodemon -r dotenv/config src/index.js"
   },
   "repository": {
     "type": "git",
