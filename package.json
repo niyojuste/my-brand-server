@@ -4,7 +4,8 @@
   "description": "My brand project server using ExpressJs, MongoDB, JWT and Joi for validation",
   "main": "src/index.js",
   "scripts": {
-    "start": "node -r dotenv/config lib/index.js"
+    "build": "babel src --out-dir lib",
+    "start": "nodemon -r dotenv/config src/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,8 +24,12 @@
   },
   "homepage": "https://github.com/niyojuste/my-brand-server#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cloudinary": "^1.28.1",
     "express": "^4.17.2",
-    "mongoose": "^6.1.8"
+    "joi": "^17.6.0",
+    "mongoose": "^6.1.8",
+    "mongoose-unique-validator": "^3.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
