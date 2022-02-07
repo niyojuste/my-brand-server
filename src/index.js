@@ -14,3 +14,5 @@ app.use('/api', postRouter)
 app.listen(process.env.PORT || 3005, () => {
 	console.log('Server is running...')
 })
+
+export default app
