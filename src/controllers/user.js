@@ -109,6 +109,10 @@ class UserController extends AppController {
         }
     }
 
+    getSelf = async (req, res) => {
+        return res.json(req.user)
+    }
+
     validatePatch = async (req, res) => {
         const newSchema = this.schema.or('name', 'username', 'email', 'password', 'avatar', 'location')
         const { error } = newSchema.validate(req.body)
@@ -122,7 +126,7 @@ class UserController extends AppController {
                 req.body.avatar = result.secure_url
                 console.log(result.message)
             } catch(e) {
-                res.status(403).json(e.message)
+                res.status(500).json(e.message)
             }
         }
         super.update(req, res)
