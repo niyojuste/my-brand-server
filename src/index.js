@@ -11,6 +11,6 @@ app.use('/api', queryRouter)
 app.use('/api', userRouter)
 app.use('/api', postRouter)
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3005, () => {
 	console.log('Server is running...')
 })
