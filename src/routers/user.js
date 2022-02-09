@@ -10,10 +10,10 @@ router.post('/users', userController.validatePost)
 router.post('/login', userController.login)
 router.get('/logout', auth, userController.logout)
 router.get('/logoutAll', auth, userController.logoutAll)
-router.get('/users', auth, authAdmin, userController.getAll)
 router.get('/users/me', auth, userController.getOne)
+router.patch('/users/me', auth, userController.validatePatch)
+router.get('/users', auth, authAdmin, userController.getAll)
 router.get('/users/:id', auth, authAdmin, userController.getSelf)
-router.patch('/users/:id', auth, userController.validatePatch)
 router.delete('/users/:id', auth, authAdmin, userController.delete)
 
 export default router

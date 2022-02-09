@@ -7,8 +7,8 @@
     "build": "babel src --out-dir lib",
     "start": "npm run build && node lib/index.js",
     "dev": "nodemon -r dotenv/config src/index.js",
-    "test": "mocha --timeout 5000 -r dotenv/config test/**.js dotenv_config_path=config/.env --exit",
-    "coverage": "nyc npm run test"
+    "test": "mocha --timeout 5000 -r dotenv/config test/ dotenv_config_path=config/.env --exit",
+    "coverage": "DEBUG=true nyc npm run test"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,10 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.8",
-    "mongoose-unique-validator": "^3.0.0"
+    "mongoose-to-swagger": "^1.4.0",
+    "mongoose-unique-validator": "^3.0.0",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
     "chai": "^4.3.6",
