@@ -37,7 +37,10 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.8",
-    "mongoose-unique-validator": "^3.0.0"
+    "mongoose-to-swagger": "^1.4.0",
+    "mongoose-unique-validator": "^3.0.0",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
     "@babel/register": "^7.17.0",
