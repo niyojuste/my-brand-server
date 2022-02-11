@@ -50,7 +50,6 @@ class UserController extends AppController {
             const user = new this._model(newuser)
             await user.save()
             const token = await new AuthController(this._model).generateAuthToken(user._id)
-            console.log(token)
             res.status(201).send({ token, user })
             
         } catch (e) {

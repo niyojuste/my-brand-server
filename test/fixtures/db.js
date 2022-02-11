@@ -31,38 +31,63 @@ const userTwo = {
     }]
 }
 
-
+const postOneId = new mongoose.Types.ObjectId
 const postOne = {
-	title: 'The multiverse trip',
+    _id: postOneId,
+	title: 'Open your eye',
 	body: 'You think you know how the world works? You think that this material universe is all that there is? What is real? What mysteries lie beyond the edge of your senses?',
-	avatar:
+	image:
 		'https://res.cloudinary.com/yustogallery/image/upload/v1643696744/my-brand/articles/RestaurantAtTheEndOfTheUniverse_zjahss.jpg',
 	user: userOneId,
 }
 
+const postTwoId = new mongoose.Types.ObjectId
 const postTwo = {
+    _id: postTwoId,
     title: 'The universe in a nutshell.',
     body: 'In the beginning, the universe was created. This in turn made a lot of people angry and was widely regarded as a bad move.',
-    avatar: 'https://res.cloudinary.com/yustogallery/image/upload/v1643696744/my-brand/articles/RestaurantAtTheEndOfTheUniverse_zjahss.jpg',
-    user: userTwoId
+    image: 'https://res.cloudinary.com/yustogallery/image/upload/v1643696744/my-brand/articles/RestaurantAtTheEndOfTheUniverse_zjahss.jpg',
+    user: userTwoId,
+    likes: [
+        userOneId
+    ]
 }
 
+const queryId = new mongoose.Types.ObjectId
 const query = {
+    _id: queryId,
     name: 'Guy Random',
     email: 'guyrandom@email.com',
     tel: '+250788112233',
-    query: 'Test query'
+    query: 'Random query'
 
 }
 
 const setupDatabase = async () => {
-    await User.deleteMany()
     await Post.deleteMany()
+    await User.deleteMany()
+    await Query.deleteMany()
     await new User(userOne).save()
     await new User(userTwo).save()
     await new Post(postOne).save()
     await new Post(postTwo).save()
-    // await new Query(query).save()
+    await new Query(query).save()
 }
 
-export { setupDatabase, userOneToken }
+const clearDatabase = async () => {
+    await Post.deleteMany()
+    await User.deleteMany()
+    await Query.deleteMany()
+}
+
+export { 
+    setupDatabase, 
+    clearDatabase,
+    userOneToken, 
+    userTwoToken, 
+    userOneId, 
+    userTwoId,
+    postOneId,
+    postTwoId,
+    queryId
+}

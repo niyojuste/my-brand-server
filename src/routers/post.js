@@ -13,7 +13,7 @@ router.get('/posts/:id', postController.getOne)
 router.patch('/posts/:id', auth, postController.validatePatch)
 router.delete('/posts/:id', auth, authAdmin, postController.delete)
 router.patch('/posts/:id/likes', auth, postController.react)
-router.post('/posts/:id/comments', auth, postController.addComment)
+router.patch('/posts/:id/comments', auth, postController.addComment)
 router.get('/posts/:id/comments', postController.getComments)
 
 export default router
