@@ -1,5 +1,7 @@
 .env
+test.env
 node_modules
 lib
-config
+.nycrc
 .nyc_output
+coverage

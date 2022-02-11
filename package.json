@@ -7,8 +7,8 @@
     "build": "babel src --out-dir lib",
     "start": "npm run build && node lib/index.js",
     "dev": "nodemon -r dotenv/config src/index.js",
-    "test": "mocha --timeout 5000 -r dotenv/config test/ dotenv_config_path=config/.env --exit",
-    "coverage": "DEBUG=true nyc npm run test"
+    "test": "mocha --timeout 5000 -r dotenv/config test/ dotenv_config_path=test.env --exit",
+    "coverage": "nyc --reporter=html --reporter=text  --reporter=lcovonly npm run test"
   },
   "repository": {
     "type": "git",
@@ -43,6 +43,7 @@
     "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
+    "@babel/register": "^7.17.0",
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
     "dotenv": "^14.3.2",

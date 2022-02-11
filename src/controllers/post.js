@@ -40,16 +40,18 @@ class PostController extends AppController {
 		const { error } = newSchema.validate(req.body)
 
 		if (error) {
-			return res.status(403).json(error.message)
+			return res.status(400).json(error.message)
 		}
-		try {
-			const result = await Cloudinary.uploadPost(req.body.image)
-			req.body.image = result.secure_url
-			console.log(result.message)
-			super.create(req.body, res)
-		} catch (e) {
-			res.status(403).json(e.message)
-		}
+        if (req.body.image) {
+            try {
+                const result = await Cloudinary.uploadPost(req.body.image)
+                req.body.image = result.secure_url
+                console.log(result.message)
+            } catch (e) {
+                res.status(400).json(e.message)
+            }
+        }
+        super.update(req, res)
 	}
 
     getAllFromUser = async (req, res) => {
@@ -64,13 +66,11 @@ class PostController extends AppController {
     async react(req, res) {
         try {
             const post = await this._model.findOne({ _id: req.params.id })
-            console.log(post)
 
             if(!post) {
                 return res.status(404).json({ message: 'Article not found' })
             }
             let message = ''
-            console.log(post.likes)
 
             if(post.likes.find(user => user.toString() === req.user._id.toString())) {
                 await post.likes.splice(post.likes.findIndex(user => user === req.user._id), 1)

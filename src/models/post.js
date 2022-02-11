@@ -2,14 +2,17 @@ import mongoose from 'mongoose'
 
 const postSchema = new mongoose.Schema({
     title: {
-        type: String
+        type: String,
+        required: true
     },
     body: {
-        type: String
+        type: String,
+        required: true
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     comments: [{
         user: {
@@ -28,7 +31,8 @@ const postSchema = new mongoose.Schema({
         ref: 'User'
     }],
     image: {
-        type: String
+        type: String,
+        required: true
     }
 }, {
     timestamps: true
