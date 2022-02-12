@@ -99,7 +99,7 @@ const options = {
                   }
                 }
               },
-              reponses: {
+              responses: {
                 '200': {
                   descritiopn: 'successful login'
                 },
