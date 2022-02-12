@@ -3,12 +3,11 @@ import jwt from 'jsonwebtoken'
 class AuthController {
     constructor(userModel) {
         this._userModel = userModel
-        this.generateAuthToken = this.generateAuthToken.bind(this)
     }
 
     generateAuthToken = async (id) => {
         const user = await this._userModel.findOne({ _id: id })
-        const token = jwt.sign({ id: user._id.toString() }, process.env.JWT_SECRET )
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET )
         
         user.tokens.push({ token })
         await user.updateOne(user)
@@ -37,13 +36,12 @@ class AuthController {
 
     authAdmin = async (req, res, next) => {
         try {
-            const admin = await this._userModel.findOne({ role: 'admin' })
+            const admin = await this._userModel.findOne({ _id: req.user._id, role: 'admin' })
 
             if(!admin) {
                 throw new Error()
             }
 
-            req.user = admin
             next()
             
         } catch(e) {

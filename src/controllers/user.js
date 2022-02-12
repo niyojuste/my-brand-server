@@ -50,7 +50,6 @@ class UserController extends AppController {
             const user = new this._model(newuser)
             await user.save()
             const token = await new AuthController(this._model).generateAuthToken(user._id)
-            console.log(token)
             res.status(201).send({ token, user })
             
         } catch (e) {
@@ -109,6 +108,10 @@ class UserController extends AppController {
         }
     }
 
+    getSelf = async (req, res) => {
+        return res.json(req.user)
+    }
+
     validatePatch = async (req, res) => {
         const newSchema = this.schema.or('name', 'username', 'email', 'password', 'avatar', 'location')
         const { error } = newSchema.validate(req.body)
@@ -122,7 +125,7 @@ class UserController extends AppController {
                 req.body.avatar = result.secure_url
                 console.log(result.message)
             } catch(e) {
-                res.status(403).json(e.message)
+                res.status(500).json(e.message)
             }
         }
         super.update(req, res)
