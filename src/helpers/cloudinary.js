@@ -9,9 +9,6 @@ cloudinary.config({
 })
 
 class Cloudinary {
-	constructor() {
-		this.uploadUser = this.uploadUser.bind(this)
-	}
 
 	static uploadUser = async (fileStr) => {
 		try {

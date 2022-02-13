@@ -32,6 +32,38 @@ describe('POST /posts', () => {
 		const post = await Post.findById(res.body._id)
 		expect(post.user.toString()).to.equal(userTwoId.toString())
 	})
+
+	it('should not create an article for an unauthenticated user', async () => {
+		const res = await chai.request(server).post('/api/posts')
+							  .send({
+								  title: 'Unlimited power',
+								  body: 'The darkside of the force is a pathway to many abilities some consider unnatural.',
+								  image: 'https://res.cloudinary.com/yustogallery/image/upload/v1644542691/my-brand/articles/palpatine-family-children-1576775874.jpg_zhyggh.jpg'
+							  })
+		expect(res).to.have.status(401)
+	})
+
+	it('should not create an article with invalid request', async () => {
+		const res = await chai.request(server).post('/api/posts')
+							  .set('Authorization', `Bearer ${userTwoToken}`)
+							  .send({
+								  title: 'Unlimited power',
+								  content: 'The darkside of the force is a pathway to many abilities some consider unnatural.',
+								  image: 'https://res.cloudinary.com/yustogallery/image/upload/v1644542691/my-brand/articles/palpatine-family-children-1576775874.jpg_zhyggh.jpg'
+							  })
+		expect(res).to.have.status(400)
+	})
+
+	it('should not create an article with invalid image', async () => {
+		const res = await chai.request(server).post('/api/posts')
+							  .set('Authorization', `Bearer ${userTwoToken}`)
+							  .send({
+								  title: 'Unlimited power',
+								  content: 'The darkside of the force is a pathway to many abilities some consider unnatural.',
+								  image: 'https://res.cloudinary.com/yustogallery/image/upload/v1644542691/my-brand/articles/palpatine-family-children-1576775874.jpg_zhyggh'
+							  })
+		expect(res).to.have.status(400)
+	})
 })
 
 describe('GET /posts', () => {
@@ -52,6 +84,11 @@ describe('GET /posts/me', () => {
 		expect(res).to.have.status(200)
 		expect(res.body).to.be.a('array').to.have.lengthOf(1)
 	})
+	it('should not fetch posts for an unauthenticated user', async () => {
+		const res = await chai.request(server).get('/api/posts/me')
+							  .send()
+		expect(res).to.have.status(401)
+	})
 })
 
 describe('GET /posts/:id', () => {
@@ -61,6 +98,7 @@ describe('GET /posts/:id', () => {
 		expect(res).to.have.status(200)
 		expect(res.body._id).to.be.equal(postOneId.toString())
 	})
+
 })
 
 describe('PATCH /posts/:id', () => {
@@ -72,6 +110,14 @@ describe('PATCH /posts/:id', () => {
 							  })
 		expect(res).to.have.status(200)
 		expect(res.body).to.own.property('_id', postTwoId.toString())
+	})
+	it('should not update an article if the request is invalid', async () => {
+		const res = await chai.request(server).patch(`/api/posts/${postTwoId}`)
+							  .set('Authorization', `Bearer ${userTwoToken}`)
+							  .send({
+								  content: "The Hitchhiker's guide to the galaxy" 
+							  })
+		expect(res).to.have.status(400)
 	})
 })
 
@@ -90,6 +136,13 @@ describe('PATCH /likes', () => {
 		expect(res).to.have.status(200)
 		expect(res.body).to.own.property('message', 'Like removed')
 	})
+	it('should not like an non-existing post id', async () => {
+		const res = await chai.request(server).patch(`/api/posts/${userOneId}/likes`)
+							  .set('Authorization', `Bearer ${userOneToken}`)
+							  .send()
+		expect(res).to.have.status(404)
+		expect(res.body).to.own.property('message', 'Article not found')
+	})
 })
 
 describe('PATCH /posts/:id/comments', () => {
@@ -107,7 +160,7 @@ describe('PATCH /posts/:id/comments', () => {
 })
 
 describe('DELETE /posts/:id', () => {
-	it('should delete an article by admin only', async() => {
+	it('should delete an article by admin', async() => {
 		const res = await chai.request(server).delete(`/api/posts/${postTwoId}`)
 							  .set('Authorization', `Bearer ${userOneToken}`)
 							  .send()
@@ -115,6 +168,15 @@ describe('DELETE /posts/:id', () => {
 		
 		const post = await Post.findById(postTwoId)
 		expect(post).to.be.null
+	})
+	it('should not delete an article if not admin', async() => {
+		const res = await chai.request(server).delete(`/api/posts/${postTwoId}`)
+							  .set('Authorization', `Bearer ${userTwoToken}`)
+							  .send()
+		expect(res).to.have.status(403)
+		
+		const post = await Post.findById(postTwoId)
+		expect(post).not.to.be.null
 	})
 })
 

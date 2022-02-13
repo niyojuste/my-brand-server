@@ -11,14 +11,10 @@ class PostController extends AppController {
     comment = Joi.object({ comment: Joi.string().required() })
 	constructor(model) {
 		super(model)
-		this.validatePost = this.validatePost.bind(this)
-		this.validatePatch = this.validatePatch.bind(this)
-        this.react = this.react.bind(this)
-        this.addComment = this.addComment.bind(this)
-        this.getComments = this.getComments.bind(this)
+        this._model = model
 	}
 
-	async validatePost(req, res) {
+	validatePost = async (req, res) => {
 		const newSchema = this.schema.and('title', 'body', 'image')
 		const { error } = newSchema.validate(req.body)
 
@@ -35,7 +31,7 @@ class PostController extends AppController {
 		}
 	}
 
-	async validatePatch(req, res) {
+	validatePatch = async (req, res) => {
 		const newSchema = this.schema.or('title', 'body', 'image')
 		const { error } = newSchema.validate(req.body)
 
@@ -63,7 +59,7 @@ class PostController extends AppController {
         }
     }
 
-    async react(req, res) {
+    react = async (req, res) => {
         try {
             const post = await this._model.findOne({ _id: req.params.id })
 
@@ -87,7 +83,7 @@ class PostController extends AppController {
         }
     }
 
-    async addComment(req, res) {
+    addComment = async (req, res) => {
         try {
             const post = await this._model.findOne({ _id: req.params.id })
             if(!post) {
@@ -105,16 +101,6 @@ class PostController extends AppController {
             res.json({ success: 'Comment saved' })
         } catch(e) {
             res.status(500).send(e)
-        }
-    }
-
-    async getComments(req, res) {
-        try {
-            const post = await this._model.findOne({ _id: req.params.id })
-            console.log(post)
-            res.json(post.comments)
-        } catch(e) {
-            res.status(404).json({ error: "Article not found" })
         }
     }
 }

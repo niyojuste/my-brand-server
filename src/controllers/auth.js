@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 class AuthController {
     constructor(userModel) {
         this._userModel = userModel
-        this.generateAuthToken = this.generateAuthToken.bind(this)
     }
 
     generateAuthToken = async (id) => {
