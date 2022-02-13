@@ -61,7 +61,7 @@ class UserController extends AppController {
     login = async (req, res) => {
         try {
             const user = await this._model.findOne({ 
-                username: req.body.username 
+                email: req.body.email 
             })
             
             if(!user) {
