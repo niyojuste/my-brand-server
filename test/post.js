@@ -99,11 +99,6 @@ describe('GET /posts/:id', () => {
 		expect(res.body._id).to.be.equal(postOneId.toString())
 	})
 
-	it('should respond with not found for a wrong post id', async () => {
-		const res = await chai.request(server).get(`/api/posts/${userOneId}`)
-							  .send()
-		expect(res).to.have.status(404)
-	})
 })
 
 describe('PATCH /posts/:id', () => {
