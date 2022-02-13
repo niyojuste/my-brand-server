@@ -23,9 +23,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
+
     - name: Test & publish code coverage
-      uses: paambaati/codeclimate-action@v3.0.0
+      uses: amancevice/setup-code-climate@v0
+      with:
+        cc_test_reporter_id: ${{ secrets.CC_TEST_REPORTER_ID }}
+    - run: cc-test-reporter before-build
+    - run: npm install
+    - run: npm run coverage
       env:
         PORT: 3000
         MONGO_URI: ${{ secrets.MONGO_URI }}
@@ -33,9 +38,4 @@ jobs:
         CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
         CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
         CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-        CC_TEST_REPORTER_ID: e9bb9199fe278d04c6902949e6aa11163c5973a34f3ca19bf6d0844deb16e9c4
-      with:
-        coverageCommand: npm run coverage
-        debug: true
-    env:
-      CI: true
+    - run: cc-test-reporter after-build
