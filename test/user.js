@@ -26,7 +26,7 @@ describe('POST /login', () => {
     it('should login an existing user', async () => {
         const res = await chai.request(server).post('/api/login')
                               .send({
-                                  username: 'Anonymous',
+                                  email: 'anonymousdoe@email.com',
                                   password: 'unknown'
                               })
         expect(res).to.have.status(200)
@@ -100,8 +100,7 @@ describe('PATCH /users/:id', () => {
         const res = await chai.request(server).patch(`/api/users/${userTwoId}`)
                               .set('Authorization', `Bearer ${userOneToken}`)
                               .send({
-                                  name: 'John Doe',
-                                  email: 'johndoe@email.com'
+                                  avatar: 'https://koms.korloy.com/resource/lib/ace-admin/assets/avatars/profile-pic.jpg'
                               })
         expect(res).to.have.status(200)
     })

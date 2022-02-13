@@ -1,0 +1,41 @@
+name: CI
+on:
+  push:
+    branches: [ main, ft-coverage ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 14.x ]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v3.0.0
+      env:
+        PORT: 3000
+        MONGO_URI: ${{ secrets.MONGO_URI }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
+        CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+        CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        CC_TEST_REPORTER_ID: e9bb9199fe278d04c6902949e6aa11163c5973a34f3ca19bf6d0844deb16e9c4
+      with:
+        coverageCommand: npm run coverage
+        debug: true
+    env:
+      CI: true
