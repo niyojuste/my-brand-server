@@ -30,6 +30,7 @@
     "@babel/cli": "^7.17.0",
     "@babel/core": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
+    "@babel/register": "^7.17.0",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.28.1",
     "core-js": "^3.21.0",
