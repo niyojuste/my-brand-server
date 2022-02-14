@@ -2,6 +2,5 @@
 test.env
 node_modules
 lib
-.nycrc
-.nyc_output
+lib-test
 coverage
