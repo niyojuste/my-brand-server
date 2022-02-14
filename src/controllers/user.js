@@ -123,7 +123,6 @@ class UserController extends AppController {
             try {
                 const result = await Cloudinary.uploadUser(req.body.avatar)
                 req.body.avatar = result.secure_url
-                console.log(result.message)
             } catch(e) {
                 res.status(500).json(e.message)
             }

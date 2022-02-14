@@ -7,7 +7,9 @@
     "build": "babel src --out-dir lib",
     "start": "npm run build && node lib/index.js",
     "dev": "nodemon -r dotenv/config src/index.js",
-    "test": "mocha --timeout 30000 test/ --exit",
+    "pretest": "npm run build && babel test --out-dir lib-test",
+    "test": "mocha --timeout 30000 -r dotenv/config lib-test/ --exit",
+    "dev-test": "c8 mocha --timeout 30000 -r dotenv/config test/ dotenv_config_path=test.env --exit", 
     "coverage": "c8 npm run test"
   },
   "repository": {
@@ -47,9 +49,7 @@
     "chai": "^4.3.6",
     "chai-http": "^4.3.0",
     "dotenv": "^14.3.2",
-    "istanbul": "^0.4.5",
     "mocha": "^9.2.0",
     "nodemon": "^2.0.15"
-  },
-  "type": "module"
+  }
 }
