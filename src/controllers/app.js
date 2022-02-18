@@ -21,7 +21,7 @@ class AppController {
     async getAll(req, res) {
         try {
             const model = await this._model.find()
-            return res.send(model)
+            return res.json(model)
         } catch (e) {
             res.status(500).send(e)
         }

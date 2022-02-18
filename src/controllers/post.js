@@ -11,7 +11,7 @@ class PostController extends AppController {
     comment = Joi.object({ comment: Joi.string().required() })
 	constructor(model) {
 		super(model)
-        this._model = model
+        this._post = model
 	}
 
 	validatePost = async (req, res) => {
@@ -52,8 +52,8 @@ class PostController extends AppController {
 
     getAllFromUser = async (req, res) => {
         try {
-            const posts = await this._model.find({ user: req.user._id })
-            res.json(posts)
+            await req.user.populate('posts')
+            res.json(req.user.posts)
         } catch(e) {
             res.status(500).json({ error: "something went wrong", e })
         }
@@ -61,7 +61,7 @@ class PostController extends AppController {
 
     react = async (req, res) => {
         try {
-            const post = await this._model.findOne({ _id: req.params.id })
+            const post = await this._post.findOne({ _id: req.params.id })
 
             if(!post) {
                 return res.status(404).json({ message: 'Article not found' })
@@ -85,7 +85,7 @@ class PostController extends AppController {
 
     addComment = async (req, res) => {
         try {
-            const post = await this._model.findOne({ _id: req.params.id })
+            const post = await this._post.findOne({ _id: req.params.id })
             if(!post) {
                 return res.status(404).json({ error: 'Article not found' })
             }
@@ -101,6 +101,19 @@ class PostController extends AppController {
             res.json({ success: 'Comment saved' })
         } catch(e) {
             res.status(500).send(e)
+        }
+    }
+
+    getComments = async (req, res) => {
+        try {
+            const post = await this._post.findOne({ _id: req.params.id })
+            for (let i = 0; i < post.comments.length; i++) {
+                await post.populate({ path: `comments.${i}.user`, select: 'username' })
+            }
+            res.json(post.comments)
+        } catch(e) {
+            console.log(e)
+            res.status(404).json({ error: "Article not found" })
         }
     }
 }

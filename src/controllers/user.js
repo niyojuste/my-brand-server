@@ -78,7 +78,7 @@ class UserController extends AppController {
 
             res.json({ token, user })
         } catch(e) {
-            res.status(400).json(e)
+            res.status(400).json({error: e})
         }
            
     }

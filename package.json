@@ -9,7 +9,7 @@
     "dev": "nodemon -r dotenv/config src/index.js",
     "pretest": "npm run build && babel test --out-dir lib-test",
     "test": "mocha --timeout 30000 -r dotenv/config lib-test/ --exit",
-    "dev-test": "c8 mocha --timeout 30000 -r dotenv/config test/ dotenv_config_path=test.env --exit", 
+    "dev-test": "c8 mocha --timeout 30000 -r dotenv/config test/ dotenv_config_path=test.env --exit",
     "coverage": "c8 npm run test"
   },
   "repository": {
@@ -35,6 +35,7 @@
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.28.1",
     "core-js": "^3.21.0",
+    "cors": "^2.8.5",
     "express": "^4.17.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
